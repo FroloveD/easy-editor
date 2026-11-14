@@ -115,6 +115,16 @@ body {
 }
 .nav-row:hover { background: var(--chrome-bg); }
 .nav-row.selected { background: var(--accent-soft); color: #fff; }
+.nav-toggle {
+  flex: none;
+  width: 12px;
+  text-align: center;
+  color: var(--chrome-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.nav-row.selected .nav-toggle { color: #fff; }
+.nav-toggle.leaf { cursor: default; }
 .nav-icon { opacity: .7; }
 .nav-name { overflow: hidden; text-overflow: ellipsis; }
 
