@@ -19,7 +19,7 @@ function canDropOn(dragId, targetId) {
 }
 
 function resolveDrop(fracMain, insideOk) {
-  if (insideOk && fracMain >= 0.25 && fracMain <= 0.75) return 'inside';
+  if (insideOk && fracMain >= 0.3 && fracMain <= 0.7) return 'inside';
   return fracMain < 0.5 ? 'before' : 'after';
 }
 
@@ -83,9 +83,10 @@ function showMark(plan) {
   markEl.className = 'visible' + (plan.mode === 'inside' ? ' inside' : '');
   const r = plan.rect;
   if (plan.mode === 'inside') {
-    markEl.style.left = r.left + 'px';
+    const ind = plan.indent || 0;
+    markEl.style.left = (r.left + ind) + 'px';
     markEl.style.top = r.top + 'px';
-    markEl.style.width = r.width + 'px';
+    markEl.style.width = (r.width - ind) + 'px';
     markEl.style.height = r.height + 'px';
   } else if (plan.horiz) {
     markEl.style.left = (plan.mode === 'before' ? r.left : r.left + r.width) + 'px';
@@ -110,9 +111,9 @@ function clearGhost() {
 function planFromEvent(e) {
   const scope = e.currentTarget;
   const el = e.target && e.target.closest ? e.target.closest('[data-id]') : null;
+  const indent = scope.id === 'navigator' ? 18 : 0;
   if (!el || !scope.contains(el)) {
-    if (scope.id !== 'canvas') return null;
-    return { targetId: site.root.id, mode: 'inside', rect: scope.getBoundingClientRect(), horiz: false };
+    return { targetId: site.root.id, mode: 'inside', rect: scope.getBoundingClientRect(), horiz: false, indent: 0 };
   }
   if (!canDropOn(dragState.id, el.dataset.id)) return null;
   const node = findNode(el.dataset.id);
@@ -123,7 +124,7 @@ function planFromEvent(e) {
     ? (e.clientX - rect.left) / (rect.width || 1)
     : (e.clientY - rect.top) / (rect.height || 1);
   const mode = resolveDrop(fracMain, insideOk);
-  return { targetId: el.dataset.id, mode, rect, horiz };
+  return { targetId: el.dataset.id, mode, rect, horiz, indent };
 }
 
 function dragStartHandler(e) {

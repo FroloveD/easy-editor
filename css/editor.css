@@ -142,11 +142,16 @@ body {
 #canvas .inline-edit { outline: 2px dashed var(--accent); cursor: text; user-select: text; }
 #canvas .empty { padding: 60px 20px; text-align: center; color: #9aa1ad; }
 
-body.preview-mode .panel, body.preview-mode #breadcrumbs { display: none; }
+body.preview-mode .panel, body.preview-mode #statusbar { display: none; }
 body.preview-mode .workspace { grid-template-columns: 0 1fr 0; }
 body.preview-mode #canvas [data-id] { cursor: default; }
 
-#breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; min-height: 28px; }
+#statusbar {
+  border-top: 1px solid var(--chrome-border);
+  background: var(--chrome-bg2);
+  padding: 4px 14px;
+}
+#breadcrumbs { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 0; min-height: 24px; }
 .crumb {
   padding: 3px 8px;
   border: 1px solid var(--chrome-border);
