@@ -3,10 +3,7 @@ let ghostEl = null;
 let markEl = null;
 
 function isContainerNode(node) {
-  if (!node || VOID_TAGS.includes(node.tag)) return false;
-  return (EL_DEFS[node.def] && EL_DEFS[node.def].empty)
-    || (node.children && node.children.length > 0)
-    || ['div', 'section', 'header', 'footer', 'nav', 'ul'].includes(node.tag);
+  return !!node && !VOID_TAGS.includes(node.tag);
 }
 
 function canDropOn(dragId, targetId) {

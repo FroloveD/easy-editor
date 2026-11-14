@@ -11,6 +11,7 @@ let previewMode = false;
 let history = [];
 let future = [];
 let suppressSnapshot = false;
+const collapsed = new Set();
 
 function uid() { return 'n' + Math.random().toString(36).slice(2, 9); }
 
@@ -196,10 +197,19 @@ function navNode(node, box, depth) {
   row.dataset.id = node.id;
   row.draggable = true;
   const def = Object.entries(EL_DEFS).find(([, d]) => d.tag === node.tag);
-  row.innerHTML = `<span class="nav-icon">${def ? def[1].icon : '▫'}</span><span class="nav-name">${node.text ? esc(node.text.slice(0, 24)) : t('el.' + (def ? def[0] : 'container'))}</span>`;
+  const hasKids = (node.children || []).length > 0;
+  const open = !collapsed.has(node.id);
+  row.innerHTML = `<span class="nav-toggle${hasKids ? '' : ' leaf'}">${hasKids ? (open ? '▾' : '▸') : ''}</span><span class="nav-icon">${def ? def[1].icon : '▫'}</span><span class="nav-name">${node.text ? esc(node.text.slice(0, 24)) : t('el.' + (def ? def[0] : 'container'))}</span>`;
+  if (hasKids) {
+    row.querySelector('.nav-toggle').addEventListener('click', e => {
+      e.stopPropagation();
+      if (open) collapsed.add(node.id); else collapsed.delete(node.id);
+      renderNavigator();
+    });
+  }
   row.addEventListener('click', () => select(node.id));
   box.appendChild(row);
-  (node.children || []).forEach(c => navNode(c, box, depth + 1));
+  if (hasKids && open) (node.children || []).forEach(c => navNode(c, box, depth + 1));
 }
 
 function renderBreadcrumbs() {
