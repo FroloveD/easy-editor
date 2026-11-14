@@ -6,7 +6,7 @@ const store = {
 const I18N = {
   ru: {
     'app.title': 'Easy Editor',
-    'app.editorSuffix': ' — редактор',
+    'app.editorSuffix': '— редактор',
     'app.elements': 'Элементы',
     'app.elementsHint': 'Клик добавляет элемент внутрь выделенного.',
     'app.navigator': 'Навигатор',
@@ -103,7 +103,7 @@ const I18N = {
   },
   en: {
     'app.title': 'Easy Editor',
-    'app.editorSuffix': ' — editor',
+    'app.editorSuffix': '— editor',
     'app.elements': 'Elements',
     'app.elementsHint': 'Click adds an element inside the selected one.',
     'app.navigator': 'Navigator',
