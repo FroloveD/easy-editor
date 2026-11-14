@@ -62,6 +62,10 @@ const I18N = {
     'st.alt': 'Описание (alt)',
 
     'opt.auto': 'Авто',
+    'opt.flex': 'Флекс',
+    'opt.grid': 'Сетка',
+    'opt.block': 'Блок',
+    'opt.inline-block': 'Строка',
     'opt.row': 'Ряд',
     'opt.column': 'Столбец',
     'opt.start': 'Начало',
@@ -87,6 +91,9 @@ const I18N = {
     'title.redo': 'Вернуть (Ctrl+Shift+Z)',
     'title.export': 'Скачать самодостаточный HTML',
     'title.preview': 'Режим просмотра',
+    'title.desktop': 'Десктоп (1100px)',
+    'title.tablet': 'Планшет (768px)',
+    'title.mobile': 'Мобильный (375px)',
   },
   en: {
     'app.title': 'Easy Editor',
@@ -146,6 +153,10 @@ const I18N = {
     'st.alt': 'Alt text',
 
     'opt.auto': 'Auto',
+    'opt.flex': 'Flex',
+    'opt.grid': 'Grid',
+    'opt.block': 'Block',
+    'opt.inline-block': 'Inline',
     'opt.row': 'Row',
     'opt.column': 'Column',
     'opt.start': 'Start',
@@ -171,6 +182,9 @@ const I18N = {
     'title.redo': 'Redo (Ctrl+Shift+Z)',
     'title.export': 'Download self-contained HTML',
     'title.preview': 'Preview mode',
+    'title.desktop': 'Desktop (1100px)',
+    'title.tablet': 'Tablet (768px)',
+    'title.mobile': 'Mobile (375px)',
   },
 };
 
