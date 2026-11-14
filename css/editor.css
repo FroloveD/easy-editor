@@ -260,7 +260,7 @@ body.preview-mode #canvas [data-id] { cursor: default; }
 .bp-btn.active { color: #fff; border-color: var(--accent); background: var(--accent-soft); }
 
 .panel-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-.ptab {
+.ptab, .rtab {
   flex: 1;
   padding: 6px 8px;
   border: 1px solid var(--chrome-border);
@@ -271,8 +271,8 @@ body.preview-mode #canvas [data-id] { cursor: default; }
   font-size: 12px;
   cursor: pointer;
 }
-.ptab:hover { color: var(--chrome-text); }
-.ptab.active { background: var(--accent-soft); border-color: var(--accent); color: #fff; }
+.ptab:hover, .rtab:hover { color: var(--chrome-text); }
+.ptab.active, .rtab.active { background: var(--accent-soft); border-color: var(--accent); color: #fff; }
 
 .seg { display: flex; border: 1px solid var(--chrome-border); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
 .seg button {
