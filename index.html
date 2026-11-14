@@ -48,8 +48,16 @@
   </section>
 
   <aside class="panel right">
-    <h2 data-i18n="app.properties">Стиль элемента</h2>
-    <div id="inspector"></div>
+    <div class="panel-tabs">
+      <button class="rtab active" data-rtab="style" data-i18n="app.styles">Стили</button>
+      <button class="rtab" data-rtab="settings" data-i18n="app.settings">Свойства</button>
+    </div>
+    <div id="tab-style">
+      <div id="inspector"></div>
+    </div>
+    <div id="tab-settings" hidden>
+      <div id="settings"></div>
+    </div>
   </aside>
 </main>
 
