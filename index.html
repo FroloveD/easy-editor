@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Easy Editor</title>
+<link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-group">
+    <span class="logo">Easy Editor</span>
+  </div>
+  <div class="topbar-group">
+    <button id="btn-undo" class="btn" data-i18n-title="title.undo" disabled>↶</button>
+    <button id="btn-redo" class="btn" data-i18n-title="title.redo" disabled>↷</button>
+  </div>
+  <div class="topbar-group">
+    <button id="btn-preview" class="btn" data-i18n="app.preview">Просмотр</button>
+    <button id="btn-export" class="btn btn-primary" data-i18n="app.export">Экспорт HTML</button>
+  </div>
+  <div class="topbar-group">
+    <button class="lang-btn active" data-lang="ru">RU</button>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+</header>
+
+<main class="workspace">
+  <aside class="panel left">
+    <h2 data-i18n="app.elements">Элементы</h2>
+    <p class="hint" data-i18n="app.elementsHint">Клик добавляет элемент внутрь выделенного.</p>
+    <div id="library"></div>
+    <h2 data-i18n="app.navigator">Навигатор</h2>
+    <div id="navigator"></div>
+  </aside>
+
+  <section class="center">
+    <div id="canvas-frame">
+      <div id="canvas"></div>
+    </div>
+  </section>
+
+  <aside class="panel right">
+    <div id="breadcrumbs"></div>
+    <h2 data-i18n="app.properties">Стиль элемента</h2>
+    <div id="inspector"></div>
+  </aside>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/elements.js"></script>
+<script src="js/editor.js"></script>
+</body>
+</html>
