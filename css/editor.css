@@ -198,3 +198,33 @@ body.preview-mode #canvas [data-id] { cursor: default; }
 .btn-ghost:hover { border-color: var(--accent); }
 .btn-ghost.btn-danger { color: var(--danger); border-color: var(--danger); margin-top: 6px; }
 .style-sec > .btn-ghost { margin-top: 4px; }
+
+#dnd-ghost {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--chrome-bg2);
+  color: var(--chrome-text);
+  font-size: 13px;
+  pointer-events: none;
+  opacity: 0;
+}
+#dnd-ghost.visible { opacity: .95; }
+
+#drop-mark {
+  position: fixed;
+  z-index: 999;
+  background: var(--accent);
+  border-radius: 2px;
+  pointer-events: none;
+  display: none;
+}
+#drop-mark.visible { display: block; }
+#drop-mark.inside { background: transparent; border: 2px dashed var(--accent); border-radius: 8px; }
+
+#canvas [data-id].dragging, #navigator .nav-row.dragging { opacity: .35; }

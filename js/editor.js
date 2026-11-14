@@ -150,6 +150,7 @@ function buildDom(node, doc = document) {
   const el = doc.createElement(node.tag);
   el.className = 'e-' + node.id;
   el.dataset.id = node.id;
+  el.draggable = !previewMode;
   if (node.attrs.href) el.setAttribute('href', node.attrs.href);
   if (node.attrs.src) el.setAttribute('src', node.attrs.src);
   if (node.attrs.alt) el.setAttribute('alt', node.attrs.alt);
@@ -193,6 +194,7 @@ function navNode(node, box, depth) {
   row.className = 'nav-row' + (node.id === selectedId ? ' selected' : '');
   row.style.paddingLeft = (8 + depth * 16) + 'px';
   row.dataset.id = node.id;
+  row.draggable = true;
   const def = Object.entries(EL_DEFS).find(([, d]) => d.tag === node.tag);
   row.innerHTML = `<span class="nav-icon">${def ? def[1].icon : '▫'}</span><span class="nav-name">${node.text ? esc(node.text.slice(0, 24)) : t('el.' + (def ? def[0] : 'container'))}</span>`;
   row.addEventListener('click', () => select(node.id));
@@ -409,6 +411,7 @@ $('#canvas').addEventListener('dblclick', e => {
   if (!node || !canText(node) || node.tag === 'img') return;
   e.preventDefault();
   el.contentEditable = 'true';
+  el.draggable = false;
   el.classList.add('inline-edit');
   el.focus();
   let done = false;
@@ -416,6 +419,7 @@ $('#canvas').addEventListener('dblclick', e => {
     if (done) return;
     done = true;
     el.contentEditable = 'false';
+    el.draggable = true;
     el.classList.remove('inline-edit');
     const val = el.textContent.trim();
     if (val !== node.text) mutate(() => { node.text = val; });
