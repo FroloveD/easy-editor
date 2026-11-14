@@ -54,6 +54,12 @@ $$('.ptab').forEach(b => b.addEventListener('click', () => {
   $('#tab-navigator').hidden = b.dataset.tab !== 'navigator';
 }));
 
+$$('.rtab').forEach(b => b.addEventListener('click', () => {
+  $$('.rtab').forEach(x => x.classList.toggle('active', x === b));
+  $('#tab-style').hidden = b.dataset.rtab !== 'style';
+  $('#tab-settings').hidden = b.dataset.rtab !== 'settings';
+}));
+
 $$('.bp-btn').forEach(b => b.addEventListener('click', () => {
   $$('.bp-btn').forEach(x => x.classList.toggle('active', x === b));
   $('#canvas-frame').style.maxWidth = b.dataset.bp === 'auto' ? '' : b.dataset.bp + 'px';
