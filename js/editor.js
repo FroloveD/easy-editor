@@ -11,6 +11,7 @@ let previewMode = false;
 let history = [];
 let future = [];
 let suppressSnapshot = false;
+const collapsed = new Set();
 
 function uid() { return 'n' + Math.random().toString(36).slice(2, 9); }
 
@@ -196,10 +197,19 @@ function navNode(node, box, depth) {
   row.dataset.id = node.id;
   row.draggable = true;
   const def = Object.entries(EL_DEFS).find(([, d]) => d.tag === node.tag);
-  row.innerHTML = `<span class="nav-icon">${def ? def[1].icon : '▫'}</span><span class="nav-name">${node.text ? esc(node.text.slice(0, 24)) : t('el.' + (def ? def[0] : 'container'))}</span>`;
+  const hasKids = (node.children || []).length > 0;
+  const open = !collapsed.has(node.id);
+  row.innerHTML = `<span class="nav-toggle${hasKids ? '' : ' leaf'}">${hasKids ? (open ? '▾' : '▸') : ''}</span><span class="nav-icon">${def ? def[1].icon : '▫'}</span><span class="nav-name">${node.name ? esc(node.name.slice(0, 24)) : (node.text ? esc(node.text.slice(0, 24)) : t('el.' + (def ? def[0] : 'container')))}</span>`;
+  if (hasKids) {
+    row.querySelector('.nav-toggle').addEventListener('click', e => {
+      e.stopPropagation();
+      if (open) collapsed.add(node.id); else collapsed.delete(node.id);
+      renderNavigator();
+    });
+  }
   row.addEventListener('click', () => select(node.id));
   box.appendChild(row);
-  (node.children || []).forEach(c => navNode(c, box, depth + 1));
+  if (hasKids && open) (node.children || []).forEach(c => navNode(c, box, depth + 1));
 }
 
 function renderBreadcrumbs() {
@@ -226,6 +236,7 @@ function select(id) {
   renderNavigator();
   renderBreadcrumbs();
   renderInspector();
+  renderSettings();
 }
 
 function fieldHtml(f, node) {
@@ -257,15 +268,7 @@ function renderInspector() {
     const rows = fields.filter(f => !f.when || f.when(node.style, node)).map(f => fieldHtml(f, node)).join('');
     return rows ? `<div class="style-sec"><h4>${t('sec.' + sec)}</h4>${rows}</div>` : '';
   }).join('');
-  const textFields = [];
-  if (canText(node) && node.tag !== 'img') textFields.push(`<label class="fld"><span>${t('st.text')}</span><textarea rows="2" data-attr="text">${esc(node.text || '')}</textarea></label>`);
-  if (node.tag === 'a') textFields.push(`<label class="fld"><span>${t('st.href')}</span><input type="text" value="${esc(node.attrs.href || '')}" data-attr="href"></label>`);
-  if (node.tag === 'img') textFields.push(
-    `<label class="fld"><span>${t('st.src')}</span><input type="text" value="${esc(node.attrs.src || '')}" data-attr="src"></label>`,
-    `<label class="fld"><span>${t('st.alt')}</span><input type="text" value="${esc(node.attrs.alt || '')}" data-attr="alt"></label>`);
-  box.innerHTML = `
-    <div class="style-sec"><h4>${esc(node.tag)} · #${esc(node.id)}</h4>${textFields.join('')}</div>
-    ${sections}
+  box.innerHTML = `${sections}
     <div class="style-sec"><h4>${t('app.actions')}</h4>
       <div class="act-row">
         <button class="btn-ghost" data-act="up">${t('act.up')}</button>
@@ -275,6 +278,29 @@ function renderInspector() {
       </div>
       <button class="btn-ghost" data-act="reset">${t('app.resetStyle')}</button>
     </div>`;
+}
+
+function renderSettings() {
+  const box = $('#settings');
+  const node = selectedId ? findNode(selectedId) : null;
+  if (!node) {
+    box.innerHTML = `<p class="hint">${t('app.noSelection')}</p>`;
+    return;
+  }
+  const defKey = (Object.entries(EL_DEFS).find(([, d]) => d.tag === node.tag) || ['container'])[0];
+  const content = [];
+  if (canText(node) && node.tag !== 'img') content.push(`<label class="fld"><span>${t('st.text')}</span><textarea rows="2" data-attr="text">${esc(node.text || '')}</textarea></label>`);
+  if (node.tag === 'a') content.push(`<label class="fld"><span>${t('st.href')}</span><input type="text" value="${esc(node.attrs.href || '')}" data-attr="href"></label>`);
+  if (node.tag === 'img') content.push(
+    `<label class="fld"><span>${t('st.src')}</span><input type="text" value="${esc(node.attrs.src || '')}" data-attr="src"></label>`,
+    `<label class="fld"><span>${t('st.alt')}</span><input type="text" value="${esc(node.attrs.alt || '')}" data-attr="alt"></label>`);
+  box.innerHTML = `
+    <div class="style-sec">
+      <label class="fld"><span>${t('st.name')}</span><input type="text" value="${esc(node.name || '')}" placeholder="${esc(t('el.' + defKey))}" data-attr="name"></label>
+      <label class="fld"><span>${t('st.tag')}</span><input type="text" value="${esc(node.tag)}" readonly></label>
+      <label class="fld"><span>${t('st.id')}</span><input type="text" value="${esc(node.id)}" readonly></label>
+    </div>
+    ${content.length ? `<div class="style-sec"><h4>${t('app.content')}</h4>${content.join('')}</div>` : ''}`;
 }
 
 function renderLibrary() {
@@ -350,6 +376,7 @@ function renderAll() {
   renderNavigator();
   renderBreadcrumbs();
   renderInspector();
+  renderSettings();
   updateHistoryButtons();
 }
 
@@ -433,31 +460,37 @@ $('#canvas').addEventListener('dblclick', e => {
   });
 });
 
-$('#inspector').addEventListener('focusin', e => {
-  if (e.target.matches('input, textarea, select')) snapshot();
-});
+['#inspector', '#settings'].forEach(boxSel => {
+  $(boxSel).addEventListener('focusin', e => {
+    if (e.target.matches('input, textarea, select')) snapshot();
+  });
 
-$('#inspector').addEventListener('input', e => {
-  const node = selectedId ? findNode(selectedId) : null;
-  if (!node) return;
-  const target = e.target;
-  if (target.dataset.skey) {
-    const pair = target.closest('.fld').querySelectorAll('[data-skey]');
-    const value = target.type === 'color' ? target.value : target.value;
-    pair.forEach(el => { if (el !== target) el.value = target.type === 'color' ? target.value : el.value; });
-    node.style[target.dataset.skey] = value;
-    persist();
-    renderCanvas();
-  } else if (target.dataset.attr === 'text') {
-    node.text = target.value;
-    persist();
-    renderCanvas();
-    renderNavigator();
-  } else if (target.dataset.attr) {
-    node.attrs[target.dataset.attr] = target.value;
-    persist();
-    renderCanvas();
-  }
+  $(boxSel).addEventListener('input', e => {
+    const node = selectedId ? findNode(selectedId) : null;
+    if (!node) return;
+    const target = e.target;
+    if (target.dataset.skey) {
+      const pair = target.closest('.fld').querySelectorAll('[data-skey]');
+      const value = target.type === 'color' ? target.value : target.value;
+      pair.forEach(el => { if (el !== target) el.value = target.type === 'color' ? target.value : el.value; });
+      node.style[target.dataset.skey] = value;
+      persist();
+      renderCanvas();
+    } else if (target.dataset.attr === 'text') {
+      node.text = target.value;
+      persist();
+      renderCanvas();
+      renderNavigator();
+    } else if (target.dataset.attr === 'name') {
+      node.name = target.value;
+      persist();
+      renderNavigator();
+    } else if (target.dataset.attr) {
+      node.attrs[target.dataset.attr] = target.value;
+      persist();
+      renderCanvas();
+    }
+  });
 });
 
 $('#inspector').addEventListener('click', e => {
