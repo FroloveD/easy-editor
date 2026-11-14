@@ -10,16 +10,17 @@
 <header class="topbar">
   <div class="topbar-group">
     <span class="logo">Easy Editor</span>
-  </div>
-  <div class="topbar-group">
     <button id="btn-undo" class="btn" data-i18n-title="title.undo" disabled>↶</button>
     <button id="btn-redo" class="btn" data-i18n-title="title.redo" disabled>↷</button>
+  </div>
+  <div class="topbar-group bp-group">
+    <button class="bp-btn active" data-bp="auto" data-i18n-title="title.desktop" title="Desktop">🖥</button>
+    <button class="bp-btn" data-bp="768" data-i18n-title="title.tablet" title="Tablet">▭</button>
+    <button class="bp-btn" data-bp="375" data-i18n-title="title.mobile" title="Mobile">📱</button>
   </div>
   <div class="topbar-group">
     <button id="btn-preview" class="btn" data-i18n="app.preview">Просмотр</button>
     <button id="btn-export" class="btn btn-primary" data-i18n="app.export">Экспорт HTML</button>
-  </div>
-  <div class="topbar-group">
     <button class="lang-btn active" data-lang="ru">RU</button>
     <button class="lang-btn" data-lang="en">EN</button>
   </div>
@@ -27,11 +28,17 @@
 
 <main class="workspace">
   <aside class="panel left">
-    <h2 data-i18n="app.elements">Элементы</h2>
-    <p class="hint" data-i18n="app.elementsHint">Клик добавляет элемент внутрь выделенного.</p>
-    <div id="library"></div>
-    <h2 data-i18n="app.navigator">Навигатор</h2>
-    <div id="navigator"></div>
+    <div class="panel-tabs">
+      <button class="ptab active" data-tab="library" data-i18n="app.elements">Элементы</button>
+      <button class="ptab" data-tab="navigator" data-i18n="app.navigator">Навигатор</button>
+    </div>
+    <div id="tab-library">
+      <p class="hint" data-i18n="app.elementsHint">Клик добавляет элемент внутрь выделенного.</p>
+      <div id="library"></div>
+    </div>
+    <div id="tab-navigator" hidden>
+      <div id="navigator"></div>
+    </div>
   </aside>
 
   <section class="center">
@@ -51,5 +58,6 @@
 <script src="js/elements.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/dnd.js"></script>
+<script src="js/ui.js"></script>
 </body>
 </html>
